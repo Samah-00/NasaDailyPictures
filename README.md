@@ -1,6 +1,6 @@
 # Nasa-Daily-Pictures
 
-Team Names:
+Team:
 * Saja Abu Maizar | sajaabu@edu.hac.ac.il
 * Samah Rajabi | samahra@edu.hac.ac.il
 
