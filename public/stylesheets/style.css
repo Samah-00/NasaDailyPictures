@@ -1,0 +1,14 @@
+
+a {
+  color: #00B7FF;
+}
+
+.medium {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 60%;
+}
+
+.images{
+  height: 180px;
+}

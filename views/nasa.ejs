@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partials/head.ejs')%>
+
+<body>
+
+<div id="loader" style="visibility: hidden; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <img src="images/loading.gif" alt="Loading...">
+</div>
+
+<div id="mainPage">
+
+    <!--Header-->
+    <div id="Header" class="container-fluid bg-dark">
+        <div class="row">
+            <!-- Logo -->
+            <div id="Header-Nasa-Logo" class="col-4">
+                <img class="img-fluid" src="./images/Nasa-Logo.png" alt="Logo" width="200" height="200">
+            </div>
+            <!-- Navigation Bar-->
+            <div id="Header-Nav-Bar" class="col-8 mt-2 mt-sm-4">
+                <!-- navbar-->
+                <nav id="navbar" class="navbar navbar-expand-md navbar-light">
+                    <!-- User's name-->
+                    <a class="nav-link" href="/Nasa-Feed" id="User" style="color: white; font-weight: bold;"><%= firstName %> <%= lastName %></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarExpanded" aria-controls="navbarExpanded" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div id="navbarExpanded" class="collapse navbar-collapse">
+                        <div class="navbar-nav">
+                            <a class="btn" id="NavbarAllPics" style="color: white; font-weight: bold;">All Pictures</a>
+                            <a class="btn" id="NavbarDate" style="color: white; font-weight: bold;">Choose a date</a>
+                            <a class="btn" type="button" id="NavbarLogout" style="color: white; font-weight: bold;">Logout</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div id="Pick_Date_Range" class="container-fluid mt-2" style="text-align: center">
+        <form id="Pick-Date-Form">
+            <label for="date-input">Date</label>
+            <input type="date" id="date-input" name="trip-start">
+            <button type="submit" class="btn btn-dark">Submit</button>
+        </form>
+    </div>
+
+
+    <div id="images-container" class="container"></div>
+    <div class="container">
+        <button id="load-more-btn" class="btn btn-dark mb-1" style="display: none">Load More</button>
+    </div>
+</div>
+
+<script defer src="javascripts/nasa.js"> </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+</body>
+</html>

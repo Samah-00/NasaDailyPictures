@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partials/head.ejs')%>
+
+<body>
+<div class="container medium">
+
+    <%- include('./partials/logo.ejs')%>
+
+    <h3 class="text-center">Please sign in</h3>
+
+    <% if(indexMatched)
+    { %>
+        <div class="text-center">
+            <small class="text-success"> Registration successful, you can now login. </small>
+        </div>
+    <% }%>
+
+    <% if(error)
+    { %>
+        <div class="text-center">
+            <small class="text-danger"> <%= error %> </small>
+        </div>
+    <% }%>
+
+    <div id="sign-in-form">
+        <form id="LoginForm" method="post" action="/" class="displayed">
+            <div class="form-group">
+                <!--Name-->
+                <label id="emailLebel" for="emailBox">Email Address</label><br>
+                <input type="text" class="form-control" name="emailBox" id="emailBox" required placeholder="Email Address"><br>
+                <!--Password-->
+                <label id="PasswordLabel" for="PasswordBox">Enter Password</label><br>
+                <input type="password" class="form-control" maxlength="32" name="PasswordBox" id="PasswordBox" required placeholder="Password"><br>
+                <button class="btn form-control center-button btn-dark" type="submit" id="loginBtn" >Login</button><br>
+                <div style="text-align: center;">
+                    <small id="registerRef" class="form-text text-muted">need to <a href="registration">register?</a></small>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+<script defer src="javascripts/login.js"> </script>
+
+</body>
+</html>
