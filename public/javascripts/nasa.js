@@ -17,10 +17,16 @@ function setDefaultDate(DateHTMLElement){
     DateHTMLElement.defaultValue = DateHTMLElement.value = date.getFullYear() + "-" + (month) + "-" + (day);
 }
 
-//this function logs the user out of his account
+// This function logs the user out of his account
 async function logout() {
     window.sessionStorage.clear(); // clearing the session(the user data)
     location.href = "/logout";
+}
+
+function DisplayDatePicker(event){
+    event.preventDefault();
+    const datePicker = document.getElementById('Pick_Date_Range');
+    datePicker.style.display = (datePicker.style.display === 'none')? 'block': 'none';
 }
 
 //This function fetches the user's email and store it in the session
@@ -67,13 +73,16 @@ document.addEventListener("DOMContentLoaded", () => {
         renderPictures(event).then(null);
     });
 
+    document.getElementById("NavbarDate").addEventListener('click', (event) => DisplayDatePicker(event));
+
     // By default, show the three most recent pictures when the page is loaded
     document.getElementById("NavbarAllPics").click();
 });
 
-//This function renders the images of nasa to the website
+// This function renders the images of nasa to the website
 async function renderPictures(event){
     event.preventDefault();
+    document.getElementById('Pick_Date_Range').style.display = 'none';
     date = new Date(document.getElementById('date-input').value);
     await fetchPictures(date);
     document.getElementById('images-container').innerHTML = '';
@@ -81,7 +90,11 @@ async function renderPictures(event){
     document.getElementById("load-more-btn").style.display="block";
 }
 
-//This function fetches NUM_OF_IMAGES (3) images from the nasa api according to a date the user desires
+/**
+ * fetches NUM_OF_IMAGES (3) images from the nasa api starting from the pic of the received date
+ * @param date
+ * @returns {Promise<void>}
+ */
 async function fetchPictures(date){
     loader.style.visibility = 'visible';
     for (let i = 0; i < NUM_OF_IMAGES; i++) {
@@ -115,33 +128,34 @@ async function fetchPictures(date){
     loader.style.visibility = 'hidden';
 }
 
-//This function builds the html element that is shown on the website
+// This function builds an HTML element for a picture
 function buildImgHTMLElement() {
     let imagesContainer = document.getElementById('images-container');
     let htmlElement = '';
     images.slice(-3).forEach((image) => {
-        loader.style.visibility = 'hidden';
-        htmlElement =
-            `<span>
+        if(typeof image.date !== 'undefined'){ // only enter when the image (that was received from nasa api) is defined
+            loader.style.visibility = 'hidden';
+            htmlElement =
+                `<span>
                 <p class="figure-caption text-dark"><b>${image.date}: ${image.title}</b></p>
                 <span class ="row">
                     <div class="col-12 col-lg-3">
                         <figure class="figure"> 
                         <img class="figure-img img-fluid rounded images" src=${image.url} alt='image/${image.date}' onclick="window.open(this.src)">`
-        if(typeof image.copyright !== 'undefined'){ // only enter this scope when the copyright is defined in nasa's api
-            htmlElement +=  `<small class="row m-2 text-muted">Copyright: ${image.copyright}</small>`;
-        }
-        htmlElement +=
-            `</figure>
+            if(typeof image.copyright !== 'undefined'){ // only enter this scope when the copyright is defined in nasa's api
+                htmlElement +=  `<small class="row m-2 text-muted">Copyright: ${image.copyright}</small>`;
+            }
+            htmlElement +=
+                `</figure>
                     </div>
                     <div class="col-12 col-lg-9"><small>${image.explanation}</small></div>
                 </span>
                 <div class="form-group">
                 <span class="row"> <div id="${image.date}">`;
-        image.comments.forEach(function(comment) {
-            htmlElement += buildCommentHTML(comment);
-        });
-        htmlElement += `</div>
+            image.comments.forEach(function(comment) {
+                htmlElement += buildCommentHTML(comment);
+            });
+            htmlElement += `</div>
                 <div class="col-11">
                     <input class="form-control" id="comment/${image.date}" type="text" name="comment" minlength="1" maxlength="128" placeholder="leave a comment (max length is 128 characters)">
                 </div>
@@ -150,7 +164,8 @@ function buildImgHTMLElement() {
                 </div>
             </span>
             <br>`;
-        imagesContainer.innerHTML += htmlElement;
+            imagesContainer.innerHTML += htmlElement;
+        }
     });
 }
 
@@ -169,7 +184,11 @@ function buildCommentHTML(comment){
     return htmlElement;
 }
 
-//This function deletes the comment the user want to delete
+/**
+ * send a delete request to the server in order to delete a comment from the database
+ * @param commentId
+ * @param imageId
+ */
 function deleteComment(commentId, imageId){
     let htmlComments = '';
     loader.style.visibility = 'visible';
@@ -229,7 +248,7 @@ function sendComment(id) {
         .catch(err => console.log(err));
 }
 
-//This function loads 3 more images when clicking on the "load more" button
+// This function loads 3 more images when clicking on the "load more" button
 async function loadMore(event){
     event.preventDefault();
     await fetchPictures(prevDay);
