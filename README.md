@@ -1,8 +1,8 @@
 # ex6-express-neviiim-ex6-sajaabumaizar-samahrajabi
 
 Team Names:
-* Saja Abu Maizar | ID:208072371 | sajaabu@edu.hac.ac.il
-* Samah Rajabi | ID: 211558556 | samahra@edu.hac.ac.il
+* Saja Abu Maizar | sajaabu@edu.hac.ac.il
+* Samah Rajabi | samahra@edu.hac.ac.il
 
 To retrieve an empty sequalize Users database, follow these steps:
 1. In the index.js file, go to line 42 where you'll find this function:
@@ -31,6 +31,4 @@ Then ..
 5. in the function in line 45, Replace the value of the parametere "force" from "true" to "false"
 This way, you've emptied the Comment database, then started collecting the data again.
 
-By default, our website shows the three most recent pictures when the nasa feed is loaded, you can as well choose the date you desire.
-
-Note: we want to inform that we submitted a day late to the due date, and we would like to take advantages of the days that we have to be late, and take this one day without deducting points from the grade.
+By default, our website shows the three most recent pictures when the nasa feed is loaded, you can as well choose a certain date .
