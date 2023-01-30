@@ -1,4 +1,4 @@
-# ex6-express-neviiim-ex6-sajaabumaizar-samahrajabi
+# Nasa-Daily-Pictures
 
 Team Names:
 * Saja Abu Maizar | sajaabu@edu.hac.ac.il
