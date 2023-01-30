@@ -49,36 +49,6 @@ function fetchUserData(){
         .catch(err => console.log(err));
 }
 
-/**
- * This function fires when the dom is done loading.
- * It sets the default date of the date picker to today's date
- * adds event listeners to the 'logout' and 'All Pictures' options in the navbar
- * adds event listeners to the 'date picker' form and to the 'load more' button
- * displays the three most recent pictures on the window
- */
-document.addEventListener("DOMContentLoaded", () => {
-
-    fetchUserData();
-
-    setDefaultDate(document.getElementById("date-input"));
-
-    document.getElementById('NavbarLogout').addEventListener("click", logout);
-
-    document.getElementById("Pick-Date-Form").addEventListener("submit",event => renderPictures(event));
-
-    document.getElementById("load-more-btn").addEventListener("click",event => loadMore(event));
-
-    document.getElementById('NavbarAllPics').addEventListener("click", (event) => {
-        setDefaultDate(document.getElementById('date-input'));
-        renderPictures(event).then(null);
-    });
-
-    document.getElementById("NavbarDate").addEventListener('click', (event) => DisplayDatePicker(event));
-
-    // By default, show the three most recent pictures when the page is loaded
-    document.getElementById("NavbarAllPics").click();
-});
-
 // This function renders the images of nasa to the website
 async function renderPictures(event){
     event.preventDefault();
@@ -133,7 +103,10 @@ function buildImgHTMLElement() {
     let imagesContainer = document.getElementById('images-container');
     let htmlElement = '';
     images.slice(-3).forEach((image) => {
-        if(typeof image.date !== 'undefined'){ // only enter when the image (that was received from nasa api) is defined
+        if(typeof image.date === 'undefined') {
+            htmlElement = `<small>can't fetch picture</small>`
+        }
+        else { // only enter this scope when the image (that was received from nasa api) is defined
             loader.style.visibility = 'hidden';
             htmlElement =
                 `<span>
@@ -164,8 +137,8 @@ function buildImgHTMLElement() {
                 </div>
             </span>
             <br>`;
-            imagesContainer.innerHTML += htmlElement;
         }
+        imagesContainer.innerHTML += htmlElement;
     });
 }
 
@@ -254,3 +227,33 @@ async function loadMore(event){
     await fetchPictures(prevDay);
     buildImgHTMLElement();
 }
+
+/**
+ * This function fires when the dom is done loading.
+ * It sets the default date of the date picker to today's date
+ * adds event listeners to the 'logout' and 'All Pictures' options in the navbar
+ * adds event listeners to the 'date picker' form and to the 'load more' button
+ * displays the three most recent pictures on the window
+ */
+document.addEventListener("DOMContentLoaded", () => {
+
+    fetchUserData();
+
+    setDefaultDate(document.getElementById("date-input"));
+
+    document.getElementById('NavbarLogout').addEventListener("click", logout);
+
+    document.getElementById("Pick-Date-Form").addEventListener("submit",event => renderPictures(event));
+
+    document.getElementById("load-more-btn").addEventListener("click",event => loadMore(event));
+
+    document.getElementById('NavbarAllPics').addEventListener("click", (event) => {
+        setDefaultDate(document.getElementById('date-input'));
+        renderPictures(event).then(null);
+    });
+
+    document.getElementById("NavbarDate").addEventListener('click', (event) => DisplayDatePicker(event));
+
+    // By default, show the three most recent pictures when the page is loaded
+    document.getElementById("NavbarAllPics").click();
+});
