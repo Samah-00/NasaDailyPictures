@@ -35,11 +35,11 @@ sequelize.authenticate().then(()=>{
     })
 
 const User = require('../models/User')(sequelize); // Import the User model
-const Comment = require('../models/Comment')(sequelize); // Import the Comment model
-
 User.sync({force: false}).then(() => {
   console.log("Users table is up");
 });
+
+const Comment = require('../models/Comment')(sequelize); // Import the Comment model
 Comment.sync({force: false}).then(() => {
   console.log("Comments table is up");
 });
@@ -67,8 +67,11 @@ async function createComment(email, name, lastName, imageId, content) {
       });
 }
 
-//this function checks if an email exists in the database
-//returns true if it exists, false otherwise
+/**
+ * This function checks if an email exists in the users' database
+ * @param email
+ * @returns {Promise<User>} true if the email exists, false otherwise
+ */
 async function isUserInDB(email) {
   return User.findOne({ where: { email }})
       .then(user =>{
@@ -89,7 +92,11 @@ async function isUserInDB(email) {
       });
 }
 
-//this function finds a user by his email(id) then returns all the data for that user
+/**
+ * This function finds a user by his email then returns all the data for that user
+ * @param email
+ * @returns {Promise<User>}
+ */
 async function findUserByEmail(email) {
   return User.findOne({ where: { email }})
       .then(user =>{ return user })
@@ -99,7 +106,7 @@ async function findUserByEmail(email) {
       });
 }
 
-//this function finds all the comments to an image and returns them
+// This function finds all the comments to an image and returns them
 async function findCommentsByImageId(imageId) {
   return Comment.findAll({ where: { imageId }})
       .then(comments => {
@@ -112,9 +119,9 @@ async function findCommentsByImageId(imageId) {
       .catch(err => {console.log(err);alert("An error has occurred: " + err.message);});
 }
 
-/* GET home page. */
+/* GET home page */
 router.get('/', function(req, res) {
-  if(req.session.firstName) //if the user is still logged in then stay in the nasa feed page
+  if(req.session.firstName) // if the user is still logged in then stay in the nasa feed page
     res.redirect('/nasa-feed')
   else
   {
@@ -278,7 +285,6 @@ router.post('/Password',function(req,res){
           });
 });
 
-//async function createComment(email, name, lastName, imageId, content) {
 router.post('/addComment', function(req, res) {
   //make sure the session didn't expire
   if(!req.session.email)
@@ -332,8 +338,8 @@ router.post('/findComments', function(req, res) {
   }
 });
 
-// ** GET error page
-//redirect to this page when an error has occured
+// GET error page
+// redirect to this page when an error occurs
 router.get('/errorPage', function(req, res) {
   res.render('errorPage',{ Title: 'Error'});
 });
