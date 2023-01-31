@@ -98,13 +98,15 @@ async function fetchPictures(date){
     loader.style.visibility = 'hidden';
 }
 
-// This function builds an HTML element for a picture
+/**
+ * This function builds HTML elements for three (NUM_OF_IMAGES) pictures and plants them in the DOM
+ */
 function buildImgHTMLElement() {
     let imagesContainer = document.getElementById('images-container');
     let htmlElement = '';
     images.slice(-3).forEach((image) => {
         if(typeof image.date === 'undefined') {
-            htmlElement = `<small>can't fetch picture</small>`
+            htmlElement = `<small>Can't fetch picture: ${image.msg}</small><br>`
         }
         else { // only enter this scope when the image (that was received from nasa api) is defined
             loader.style.visibility = 'hidden';
@@ -142,7 +144,7 @@ function buildImgHTMLElement() {
     });
 }
 
-//this function build the comments html element that is shown on the website
+// This function build the comments html element that is shown on the website
 function buildCommentHTML(comment){
     let htmlElement = `
     <div class="row">
