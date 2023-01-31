@@ -5,7 +5,6 @@ const { Sequelize } = require('sequelize');
 // use the cookie package
 const bcrypt = require('bcrypt'); // to encrypt passwords
 const session = require('express-session');
-const {response} = require("express");
 const crypto = require('crypto'); // to generate a secret key for the session
 
 // --- global consts and variables ---
@@ -13,7 +12,6 @@ let indexMatched = false;
 let emailUsed = false;
 let timeOut = false;
 const saltRounds = 10;
-
 
 // --- prepare the session, the connection and the database ---
 // generate a secret key for the session
@@ -293,9 +291,9 @@ router.post('/addComment', function(req, res) {
                 .then(comments => {
                   res.json(comments);
                 })
-                .catch(err => res.redirect('errorPage'))
+                .catch(() => res.redirect('errorPage'))
         )
-        .catch(err=> res.redirect('/errorPage'));
+        .catch(()=> res.redirect('/errorPage'));
   }
 });
 
@@ -330,7 +328,7 @@ router.post('/findComments', function(req, res) {
         .then(comments => {
           res.json(comments);
         })
-        .catch(err => res.redirect('errorPage'))
+        .catch(() => res.redirect('errorPage'))
   }
 });
 
