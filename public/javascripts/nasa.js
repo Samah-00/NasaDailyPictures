@@ -7,7 +7,7 @@ let prevDay;
 const loader = document.getElementById('loader');
 
 /**
- * Set the default and max values of the date picker to today's date.
+ * Set the default value of the date picker to today's date.
  * @param DateHTMLElement
  */
 function setDefaultDate(DateHTMLElement){
@@ -61,7 +61,7 @@ async function renderPictures(event){
 }
 
 /**
- * fetches NUM_OF_IMAGES (3) images from the nasa api starting from the pic of the received date
+ * fetch NUM_OF_IMAGES (3) images from the nasa api starting from the pic of the received date
  * @param date
  * @returns {Promise<void>}
  */
