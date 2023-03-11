@@ -26,7 +26,10 @@ module.exports = (sequelize) => {
         },
         content: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                len: [1, 128]
+            }
         }
     }, {
         sequelize

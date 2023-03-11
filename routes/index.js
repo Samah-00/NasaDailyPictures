@@ -14,7 +14,7 @@ let timeOut = false;
 const saltRounds = 10;
 
 // --- prepare the session, the connection and the database ---
-// generate a secret key for the session
+// generate a secretive key for the session
  const secret = crypto.randomBytes(64).toString('hex');
 router.use(session({
   secret: secret,
@@ -93,7 +93,7 @@ async function isUserInDB(email) {
 }
 
 /**
- * This function finds a user by his email then returns all the data for that user
+ * This function finds a user by his email then returns all his data
  * @param email
  * @returns {Promise<User>}
  */
@@ -304,14 +304,14 @@ router.post('/addComment', function(req, res) {
 });
 
 router.delete('/comments/:id', (req, res) => {
-  const commentId = req.params.id;
-    const imageId = req.body.imageId;
-  // Use Sequelize to delete the comment with the given id
-  Comment.destroy({
-    where: {
-      id: commentId
-    }
-  })
+      const commentId = req.params.id;
+      const imageId = req.body.imageId;
+      Comment.destroy({
+        where: {
+          id: commentId,
+          email: req.session.email  // to ensure that the deleter is the owner of the comment
+        }
+      })
       .then(() => {
         findCommentsByImageId(imageId)
             .then(comments => {

@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Get the form data
         let formData = new FormData(form);
         // Make it case-sensitive
-        formData.forEach((value, key) => formData.set(key, value.toUpperCase()));
+        formData.forEach((value, key) => formData.set(key, value.toLowerCase()));
         const email = document.getElementById("emailBox").value.trim();
         const firstName = document.getElementById("nameBox").value.trim();
         const lastName = document.getElementById("LastNameBox").value.trim();
