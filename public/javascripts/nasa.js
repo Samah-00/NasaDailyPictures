@@ -219,6 +219,8 @@ function sendComment(id) {
             });
             // update the list of comments of the image
             document.getElementById(`${id}`).innerHTML = htmlComments;
+            // clear the comment input field
+            document.getElementById(`${comId}`).value = '';
         })
         .catch(err => console.log(err));
 }

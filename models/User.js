@@ -5,32 +5,32 @@ module.exports = (sequelize) => {
     User.init({
         email: {
             type: Sequelize.STRING,
+            allowNull: false,
             validate: {
-                allowNull: false,
                 isEmail: true
             }
         },
         name: {
             type: Sequelize.STRING,
+            allowNull: false,
             validate: {
-                allowNull: false,
                 len: [3, 32],
                 isAlpha: true
             }
         },
         lastName: {
             type: Sequelize.STRING,
+            allowNull: false,
             validate: {
-                allowNull: false,
                 len: [1, 32],
                 isAlpha: true
             }
         },
         password: {
             type: Sequelize.STRING,
+            allowNull: false,
             validate: {
-                allowNull: false,
-                len: [1, 32]
+                len: [1, Infinity]
             }
         }
     }, {
