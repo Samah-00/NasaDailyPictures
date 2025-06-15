@@ -55,7 +55,7 @@ async function renderPictures(event){
     document.getElementById('Pick_Date_Range').style.display = 'none';
     date = new Date(document.getElementById('date-input').value);
     await fetchPictures(date);
-    document.getElementById('images-container').innerHTML = '';
+    document.getElementById('grid-wrapper').innerHTML = '';
     buildImgHTMLElement();
     document.getElementById("load-more-btn").style.display="block";
 }
@@ -102,60 +102,110 @@ async function fetchPictures(date){
  * This function builds HTML elements for three (NUM_OF_IMAGES) pictures and plants them in the DOM
  */
 function buildImgHTMLElement() {
-    let imagesContainer = document.getElementById('images-container');
+    let gridWrapper = document.getElementById('grid-wrapper');
     let htmlElement = '';
+
     images.slice(-3).forEach((image) => {
-        if(typeof image.date === 'undefined') {
-            htmlElement = `<small>Can't fetch picture: ${image.msg}</small><br>`
-        }
-        else { // only enter this scope when the image (that was received from nasa api) is defined
-            loader.style.visibility = 'hidden';
-            htmlElement =
-                `<span>
-                <p class="figure-caption text-dark"><b>${image.date}: ${image.title}</b></p>
-                <span class ="row">
-                    <div class="col-12 col-lg-3">
-                        <figure class="figure"> 
-                        <img class="figure-img img-fluid rounded images" src=${image.url} alt='image/${image.date}' onclick="window.open(this.src)">`
-            if(typeof image.copyright !== 'undefined'){ // only enter this scope when the copyright is defined in nasa's api
-                htmlElement +=  `<small class="row m-2 text-muted">Copyright: ${image.copyright}</small>`;
-            }
-            htmlElement +=
-                `</figure>
-                    </div>
-                    <div class="col-12 col-lg-9"><small>${image.explanation}</small></div>
-                </span>
-                <div class="form-group">
-                <span class="row"> <div id="${image.date}">`;
+        if (!image.date) {
+            htmlElement += `<small>Can't fetch picture: ${image.msg}</small><br>`;
+        } else {
+            const explanationId = `explanation-${image.date}`;
+            const readMoreId = `read-more-${image.date}`;
+            const hideBtnId = `hide-${image.date}`;
+            const commentsCollapseId = `comments-${image.date}`;
+
+            htmlElement += `
+            <div class="image-card">
+                <img src="${image.url}" alt="image/${image.date}" onclick="window.open(this.src)">
+                <div class="card-body">
+                    <h5><b>${image.date}: ${image.title}</b></h5>
+                    ${image.copyright ? `<small class="text-muted">© ${image.copyright}</small><br>` : ""}
+                    <p id="${explanationId}" class="explanation">${image.explanation}</p>
+                    <span class="read-more" id="${readMoreId}" onclick="toggleText('${image.date}')">Read more</span>
+                    <span class="read-more" id="${hideBtnId}" onclick="toggleText('${image.date}')" style="display:none;">Hide</span>
+                    <a class="read-more" data-bs-toggle="collapse" href="#${commentsCollapseId}" role="button"
+                        aria-expanded="false" aria-controls="${commentsCollapseId}"
+                        onclick="toggleCommentText(this)" id="toggle-${image.date}">
+                        Show Comments
+                    </a>      
+                    <div class="collapse mt-2" id="${commentsCollapseId}">
+                    <div id="${image.date}">`;
+
             image.comments.forEach(function(comment) {
                 htmlElement += buildCommentHTML(comment);
             });
-            htmlElement += `</div>
-                <div class="col-11">
-                    <input class="form-control" id="comment/${image.date}" type="text" name="comment" minlength="1" maxlength="128" placeholder="leave a comment (max length is 128 characters)">
+
+           htmlElement += `</div>
+                        <div class="mt-3">
+                            <div class="input-group">
+                                <input class="form-control" id="comment/${image.date}" type="text" name="comment"
+                                    minlength="1" maxlength="128" placeholder="Leave a comment...">
+                                <button onclick="sendComment('${image.date}')" class="btn btn-outline-secondary" type="button">
+                                    Send
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-1"><button id="sendBtn" onclick="sendComment('${image.date}')" type="submit"  class="btn btn-dark">Send</button></div>
-                </span>
-                </div>
-            </span>
-            <br>`;
+            </div>
+            `;
+
         }
-        imagesContainer.innerHTML += htmlElement;
+        htmlElement += `</div>`;
     });
+
+    gridWrapper.innerHTML += htmlElement;
+}
+
+function toggleText(date) {
+    const para = document.getElementById(`explanation-${date}`);
+    const readMore = document.getElementById(`read-more-${date}`);
+    const hideBtn = document.getElementById(`hide-${date}`);
+
+    const isExpanded = para.style.webkitLineClamp === 'unset';
+
+    if (isExpanded) {
+        para.style.webkitLineClamp = '3';
+        readMore.style.display = 'inline-block';
+        hideBtn.style.display = 'none';
+    } else {
+        para.style.webkitLineClamp = 'unset';
+        readMore.style.display = 'none';
+        hideBtn.style.display = 'inline-block';
+    }
+}
+
+function toggleCommentText(element) {
+    const targetId = element.getAttribute("href").replace('#', '');
+    const target = document.getElementById(targetId);
+
+    setTimeout(() => {
+        if (target.classList.contains("show")) {
+            element.textContent = "Hide Comments";
+        } else {
+            element.textContent = "Show Comments";
+        }
+    }, 1000);
 }
 
 // This function build the comments html element that is shown on the website
-function buildCommentHTML(comment){
+function buildCommentHTML(comment) {
     let htmlElement = `
-    <div class="row">
-    <div class="col-11">
-    <small id="${comment.id}" data-email=${comment.email} data-imageId=${comment.imageId}><b>${comment.name} ${comment.lastName}</b> commented: ${comment.content}</small></div>`
-    if(window.sessionStorage.getItem('email') === comment.email)
-    {
+        <div class="d-flex justify-content-between align-items-start mb-2">
+            <small id="${comment.id}" data-email="${comment.email}" data-imageId="${comment.imageId}">
+                <b>${comment.name} ${comment.lastName}</b> commented: ${comment.content}
+            </small>`;
+
+    if (window.sessionStorage.getItem('email') === comment.email) {
         const imageId = comment.imageId.toString();
-        htmlElement += `<div class="col-1"><button onclick="deleteComment('${comment.id}', '${imageId}')" class="btn btn-outline-dark btn-sm" type="button"> Delete </button></div>`;
+        htmlElement += `
+            <button onclick="deleteComment('${comment.id}', '${imageId}')"
+                    class="btn btn-outline-dark btn-sm ms-2 mt-1">
+                Delete
+            </button>`;
     }
-    htmlElement += `</div><br>`;
+
+    htmlElement += `</div>`;
     return htmlElement;
 }
 

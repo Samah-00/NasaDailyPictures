@@ -12,3 +12,57 @@ a {
 .images{
   height: 180px;
 }
+
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.image-card {
+  width: 30%;
+  min-width: 300px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+  background-color: #f8f9fa;
+  transition: transform 0.2s ease;
+}
+
+.image-card:hover {
+  transform: scale(1.02);
+}
+
+.image-card img {
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+}
+
+.card-body {
+  padding: 15px;
+}
+
+.explanation {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Show 3 lines only */
+  -webkit-box-orient: vertical;
+}
+
+.read-more {
+  color: #007bff;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.image-card .form-control {
+  border-radius: 0.375rem 0 0 0.375rem;
+}
+
+.image-card .btn {
+  border-radius: 0 0.375rem 0.375rem 0;
+}
