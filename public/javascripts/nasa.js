@@ -66,7 +66,6 @@ async function renderPictures(event){
  * @returns {Promise<void>}
  */
 async function fetchPictures(date){
-    loader.style.visibility = 'visible';
     for (let i = 0; i < NUM_OF_IMAGES; i++) {
         prevDay = new Date(date.getFullYear(), date.getMonth(), date.getDate() - (i-1));
         let prevDayFormatted = prevDay.toISOString().substr(0,10);
@@ -95,7 +94,6 @@ async function fetchPictures(date){
         }
     }
     prevDay = new Date(prevDay.getFullYear(), prevDay.getMonth(), prevDay.getDate() - 2);
-    loader.style.visibility = 'hidden';
 }
 
 /**
@@ -209,6 +207,22 @@ function buildCommentHTML(comment) {
     return htmlElement;
 }
 
+function toggleLoadMoreLoading(isLoading) {
+    const spinner = document.getElementById("load-more-spinner");
+    const text = document.getElementById("load-more-text");
+    const button = document.getElementById("load-more-btn");
+
+    if (isLoading) {
+        spinner.classList.remove("d-none");
+        text.textContent = "Loading...";
+        button.disabled = true;
+    } else {
+        spinner.classList.add("d-none");
+        text.textContent = "Load More";
+        button.disabled = false;
+    }
+}
+
 /**
  * send a delete request to the server in order to delete a comment from the database
  * @param commentId
@@ -276,10 +290,19 @@ function sendComment(id) {
 }
 
 // This function loads 3 more images when clicking on the "load more" button
-async function loadMore(event){
+async function loadMore(event) {
     event.preventDefault();
-    await fetchPictures(prevDay);
-    buildImgHTMLElement();
+
+    toggleLoadMoreLoading(true);
+
+    try {
+        await fetchPictures(prevDay);
+        buildImgHTMLElement();        
+    } catch (error) {
+        console.error("Failed to load more images:", error);
+    } finally {
+        toggleLoadMoreLoading(false);
+    }
 }
 
 /**

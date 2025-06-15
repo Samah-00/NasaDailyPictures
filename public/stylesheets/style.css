@@ -66,3 +66,15 @@ a {
 .image-card .btn {
   border-radius: 0 0.375rem 0.375rem 0;
 }
+
+#load-more-btn:hover {
+    background-color: #343a40;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.03);
+    transition: all 0.2s ease-in-out;
+}
+
+#load-more-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}

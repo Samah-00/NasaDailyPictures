@@ -50,8 +50,11 @@
     <div id="images-container" class="container mt-2">
           <div class="image-grid" id="grid-wrapper"></div>
     </div>
-    <div class="container">
-        <button id="load-more-btn" class="btn btn-dark mb-1" style="display: none">Load More</button>
+    <div class="container d-flex justify-content-center my-4">
+        <button id="load-more-btn" class="btn btn-dark px-4 py-2 position-relative" style="display: none;">
+            <span class="spinner-border spinner-border-sm me-2 d-none" id="load-more-spinner" role="status" aria-hidden="true"></span>
+            <span id="load-more-text">Load More</span>
+        </button>
     </div>
 </div>
 
