@@ -23,10 +23,10 @@ async function logout() {
     location.href = "/logout";
 }
 
-function DisplayDatePicker(event){
+function DisplayDatePicker(event) {
     event.preventDefault();
     const datePicker = document.getElementById('Pick_Date_Range');
-    datePicker.style.display = (datePicker.style.display === 'none')? 'block': 'none';
+    datePicker.classList.toggle('d-none');
 }
 
 //This function fetches the user's email and store it in the session
