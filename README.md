@@ -6,8 +6,8 @@ A full-stack web application that allows users to explore NASA's daily space pho
 
 ## Team
 
-* **Saja Abu Maizar**
 * **Samah Rajabi**
+* **Saja Abu Maizar**
 
 ---
 
