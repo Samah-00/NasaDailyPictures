@@ -30,7 +30,7 @@ images.slice(-3).forEach((image) => {
 
         htmlElement += `
         <div class="image-card">
-            <img src="${image.url}" alt="image/${imageDate}" onclick="window.open(this.src)">
+            <img src="${image.url}" alt="image or video/${imageDate}" onclick="window.open(this.src)">
             <div class="card-body">
                 <h5><b>${imageDate}: ${imageTitle}</b></h5>
                 ${imageCopyright ? `<small class="text-muted">© ${imageCopyright}</small><br>` : ""}
