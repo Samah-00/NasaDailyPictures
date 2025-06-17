@@ -2,9 +2,6 @@ import { setDefaultDate, DisplayDatePicker } from './dateUtills.js';
 import { fetchUserData, fetchPictures, images, prevDay } from './api.js';
 import { buildImgHTMLElement, toggleLoadMoreLoading } from './ui.js';
 
-
-let date;
-
 // This function logs the user out of his account
 async function logout() {
     window.sessionStorage.clear(); // clearing the session(the user data)
@@ -12,14 +9,34 @@ async function logout() {
 }
 
 // This function renders the images of nasa to the website
-async function renderPictures(event){
+async function renderPictures(event) {
     event.preventDefault();
+
     document.getElementById('Pick_Date_Range').style.display = 'none';
-    date = new Date(document.getElementById('date-input').value);
-    await fetchPictures(date);
-    document.getElementById('grid-wrapper').innerHTML = '';
-    buildImgHTMLElement(images);
-    document.getElementById("load-more-btn").style.display="block";
+
+    const dateInput = document.getElementById('date-input').value;
+    if (!dateInput) {
+        alert("Please select a valid date.");
+        return;
+    }
+
+    const selectedDate = new Date(dateInput);
+
+    try {
+        toggleLoadMoreLoading(true);
+
+        await fetchPictures(selectedDate);
+
+        document.getElementById('grid-wrapper').innerHTML = '';
+        buildImgHTMLElement(images);
+        document.getElementById("load-more-btn").style.display = "block";
+
+    } catch (error) {
+        console.error("Failed to render pictures:", error);
+        alert("An error occurred while loading pictures. Please try again.");
+    } finally {
+        toggleLoadMoreLoading(false);
+    }
 }
 
 // This function loads 3 more images when clicking on the "load more" button
@@ -30,9 +47,10 @@ async function loadMore(event) {
 
     try {
         await fetchPictures(prevDay);
-        buildImgHTMLElement(images);        
+        buildImgHTMLElement(images);
     } catch (error) {
         console.error("Failed to load more images:", error);
+        alert("Failed to load more images. Please try again later.");
     } finally {
         toggleLoadMoreLoading(false);
     }

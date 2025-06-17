@@ -5,6 +5,7 @@ export {
     buildCommentHTML,
     toggleLoadMoreLoading
 };
+
 /**
  * This function builds HTML elements for three (NUM_OF_IMAGES) pictures and plants them in the DOM
  */
@@ -12,53 +13,58 @@ function buildImgHTMLElement(images) {
     let gridWrapper = document.getElementById('grid-wrapper');
     let htmlElement = '';
 
-    images.slice(-3).forEach((image) => {
-        if (!image.date) {
-            htmlElement += `<small>Can't fetch picture: ${image.msg}</small><br>`;
-        } else {
-            const explanationId = `explanation-${image.date}`;
-            const readMoreId = `read-more-${image.date}`;
-            const hideBtnId = `hide-${image.date}`;
-            const commentsCollapseId = `comments-${image.date}`;
+images.slice(-3).forEach((image) => {
+    if (!image.date) {
+        htmlElement += `<small>Can't fetch picture: ${image.msg ?? 'No message available'}</small><br>`;
+    } else {
+        const imageDate = image.date ?? 'Unknown Date';
+        const imageTitle = image.title ?? 'Untitled';
+        const imageCopyright = image.copyright ?? 'Unknown';
+        const imageExplanation = image.explanation ?? 'No explanation provided.';
+        const imageComments = image.comments ?? [];
 
-            htmlElement += `
-            <div class="image-card">
-                <img src="${image.url}" alt="image/${image.date}" onclick="window.open(this.src)">
-                <div class="card-body">
-                    <h5><b>${image.date}: ${image.title}</b></h5>
-                    ${image.copyright ? `<small class="text-muted">© ${image.copyright}</small><br>` : ""}
-                    <p id="${explanationId}" class="explanation">${image.explanation}</p>
-                    <span class="read-more read-more-btn" id="${readMoreId}" data-date="${image.date}">Read more</span>
-                    <span class="read-more hide-read-more-btn d-none" id="${hideBtnId}" data-date="${image.date}">Hide</span>
-                    <a class="read-more comment-toggle-link" data-target="${commentsCollapseId}" data-bs-toggle="collapse" href="#${commentsCollapseId}" role="button"
-                        aria-expanded="false" aria-controls="${commentsCollapseId}" id="toggle-${image.date}">
-                        Show Comments
-                    </a>      
-                    <div class="collapse mt-2" id="${commentsCollapseId}">
-                    <div id="${image.date}">`;
+        const explanationId = `explanation-${imageDate}`;
+        const readMoreId = `read-more-${imageDate}`;
+        const hideBtnId = `hide-${imageDate}`;
+        const commentsCollapseId = `comments-${imageDate}`;
 
-            image.comments.forEach(function(comment) {
-                htmlElement += buildCommentHTML(comment);
-            });
+        htmlElement += `
+        <div class="image-card">
+            <img src="${image.url}" alt="image/${imageDate}" onclick="window.open(this.src)">
+            <div class="card-body">
+                <h5><b>${imageDate}: ${imageTitle}</b></h5>
+                ${imageCopyright ? `<small class="text-muted">© ${imageCopyright}</small><br>` : ""}
+                <p id="${explanationId}" class="explanation">${imageExplanation}</p>
+                <span class="read-more read-more-btn" id="${readMoreId}" data-date="${imageDate}">Read more</span>
+                <span class="read-more hide-read-more-btn d-none" id="${hideBtnId}" data-date="${imageDate}">Hide</span>
+                <a class="read-more comment-toggle-link" data-target="${commentsCollapseId}" data-bs-toggle="collapse" href="#${commentsCollapseId}" role="button"
+                    aria-expanded="false" aria-controls="${commentsCollapseId}" id="toggle-${imageDate}">
+                    Show Comments
+                </a>      
+                <div class="collapse mt-2" id="${commentsCollapseId}">
+                    <div id="${imageDate}">`;
 
-           htmlElement += `</div>
-                        <div class="mt-3">
-                            <div class="input-group">
-                                <input class="form-control" id="comment/${image.date}" type="text" name="comment"
-                                    minlength="1" maxlength="128" placeholder="Leave a comment...">
-                                <button class="btn btn-outline-secondary send-comment-btn" type="button" data-id="${image.date}">
-                                    Send
-                                </button>
-                            </div>
+        imageComments.forEach(function(comment) {
+            htmlElement += buildCommentHTML(comment);
+        });
+
+        htmlElement += `</div>
+                    <div class="mt-3">
+                        <div class="input-group">
+                            <input class="form-control" id="comment/${imageDate}" type="text" name="comment"
+                                minlength="1" maxlength="128" placeholder="Leave a comment...">
+                            <button class="btn btn-outline-secondary send-comment-btn" type="button" data-id="${imageDate}">
+                                Send
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-            `;
-
-        }
-        htmlElement += `</div>`;
-    });
+        </div>
+        `;
+    }
+    htmlElement += `</div>`;
+});
 
     gridWrapper.innerHTML += htmlElement;
 
